@@ -53,8 +53,15 @@ jobs:
           
           chmod +x gradlew || true
           ./gradlew assembleDebug
+          
+          # Move back to repository root to search and copy all APKs
+          cd "${GITHUB_WORKSPACE}"
+          mkdir -p apk-artifacts
+          find . -name "*.apk" -type f -exec cp {} apk-artifacts/ \;
+          echo "Copied APK files to root apk-artifacts directory:"
+          ls -la apk-artifacts/ || true
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MhasbMali-Debug-APK
-          path: '**/build/outputs/apk/debug/*.apk'
+          path: apk-artifacts/*.apk
